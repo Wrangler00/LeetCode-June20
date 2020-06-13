@@ -1,0 +1,36 @@
+//cpp dp solution
+
+class Solution {
+public:
+    vector<int> largestDivisibleSubset(vector<int>& n) {
+        vector<int> ans;
+        int sz = n.size();
+        
+        if(sz == 0 || sz == 1)
+            return n;
+        
+        sort(n.begin(), n.end());
+        
+        vector<int> dp(sz+1,1);
+        vector<int> prev(sz+1,-1);
+        int max_ind = 0;
+        
+        for(int i=1;i<sz;i++){
+            for(int j=0;j<i;j++){
+                if(n[i]%n[j] == 0 && dp[i]<dp[j]+1){
+                    dp[i] = dp[j]+1;
+                    prev[i] = j;
+                }
+            }
+            if(dp[max_ind]<dp[i])
+                max_ind = i;
+        }
+        
+        while(max_ind>=0){
+            ans.push_back(n[max_ind]);
+            max_ind = prev[max_ind];
+        }
+        
+        return ans;
+    }
+};
