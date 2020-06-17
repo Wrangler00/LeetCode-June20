@@ -1,0 +1,110 @@
+Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
+
+A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+Example:
+
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+
+X X X X
+X X X X
+X X X X
+X O X X
+Explanation:
+
+Surrounded regions shouldn’t be on the border, which means that any 'O' on the border of the board are not flipped to 'X'. Any 'O' that is not on the border and it is not connected to an 'O' on the border will be flipped to 'X'. Two cells are connected if they are adjacent cells connected horizontally or vertically.
+
+//cpp my solution
+
+class Solution {
+public:
+    int solve(vector<vector<char>> &bd,vector<vector<int>> &vis,int i,int j,vector<pair<int,int>> &ind,int curr){
+        if(i==bd.size() || j==bd[0].size() || i==-1 || j == -1){
+            // cout<<"out of :: "<<i<<" "<<j<<endl;
+            return -1;
+        }
+        
+        // cout<<i<<" "<<j<<" "<<vis[i][j]<<endl;;
+        if(vis[i][j]){
+            if(bd[i][j] == 'O' && vis[i][j]!=curr){
+                // cout<<"\n******* "<<i<<" "<<j<<" "<<vis[i][j]<<" "<<curr<<endl;
+                return -1;
+            }
+            return 0;
+        }
+        vis[i][j] = curr;
+        
+        if(bd[i][j] == 'X'){
+            // cout<<"X :: "<<i<<" "<<j<<endl;
+            return 1;
+        }
+        
+        ind.push_back(make_pair(i,j));
+        int a = solve(bd,vis,i-1,j,ind,curr);
+        if(a == -1) return a;
+        int b = solve(bd,vis,i,j-1,ind,curr);
+        if(b==-1) return b;
+        int c = solve(bd,vis,i+1,j,ind,curr);
+        if(c==-1) return c;
+        int d = solve(bd,vis,i,j+1,ind,curr);
+        if(d==-1) return d;
+        
+        return 1;
+    }
+    void mark(vector<vector<char>> &bd, vector<pair<int,int>> &ind){
+        for(auto i:ind){
+            bd[i.first][i.second] = 'X';
+        }
+        
+        return;
+    }
+    void print(vector<vector<int>> &vis,int sz,int r_sz){
+        cout<<"Visited \n";
+        for(int i=0;i<sz;i++){
+            for(int j=0;j<r_sz;j++)
+                cout<<vis[i][j]<<" ";
+            cout<<endl;
+        }
+    }
+    void solve(vector<vector<char>>& bd) {
+        int sz = bd.size();
+        if(sz<3)    return;
+        
+        int r_sz = bd[0].size();
+        if(r_sz <3) return;
+        
+        vector<vector<int>> vis(sz,vector<int>(r_sz,0));
+        
+        int curr = 0;
+        for(int i=1;i<sz-1;i++){
+            for(int j=1;j<r_sz-1;j++){
+                vector<pair<int,int>> ind;
+                // cout<<i<<" "<<j<<endl;
+                ++curr;
+                // cout<<"-loop :: "<<i<<" "<<j<<endl;
+                int res = solve(bd,vis,i,j,ind,curr);
+                // cout<<"+loop :: "<<res<<" "<<curr<<endl;
+                
+                // print(vis,sz,r_sz);
+                if(res == -1)
+                    continue;
+                else{
+                    // cout<<i<<" "<<j<<" "<<ind.size()<<" mark\n";
+                    mark(bd,ind);
+                }
+            }
+        }
+        
+        // for(int i=0;i<sz;i++){
+        //     for(int j=0;j<r_sz;j++)
+        //         cout<<vis[i][j]<<" ";
+        //     cout<<endl;
+        // }
+        
+        return;
+    }
+};
