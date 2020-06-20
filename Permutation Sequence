@@ -1,0 +1,46 @@
+The set [1,2,3,...,n] contains a total of n! unique permutations.
+
+By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+Given n and k, return the kth permutation sequence.
+
+Note:
+
+Given n will be between 1 and 9 inclusive.
+Given k will be between 1 and n! inclusive.
+
+
+//cpp my solution failed because i missed k--
+//anyways here is correct solution
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        long per[n+1];
+        vector<int> arr;
+        
+        per[0] = 1;
+        
+        for(int i=1;i<=n;i++){
+            per[i] = per[i-1]*i;
+            arr.push_back(i);
+        }
+        
+        string ans = "";
+        long rem,each;
+        --k;
+        for(int i=1;i<=n;i++){
+            rem = k/per[n-i];
+            ans = ans+to_string(arr[rem]);
+            arr.erase(arr.begin() + rem);
+            k= k%per[n-i];
+        }
+        return ans;
+    }
+};
