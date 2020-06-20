@@ -35,7 +35,9 @@ public:
 
 #define ll long int
 class Solution {
-ll prime = INT_MAX / 26 / 26 * 26 - 1;  //very important
+ll prime = INT_MAX / 26 / 26 * 26 - 1;  //very important // = 82595499
+// order of 26 mod 82595499 is 11799354 > 50000, so this choice should result in minimum collision
+
 int d = 26;
 vector<ll> hash;
 public:
